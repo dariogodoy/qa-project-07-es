@@ -1,0 +1,26 @@
+# _**Dario Godoy- QA-07-7mo sprint_**
+
+# Descripción
+Este proyecto es una aplicación web que proporciona servicios de transporte urbano. Permite a los usuarios planificar rutas,
+solicitar taxis y seleccionar diferentes tarifas de servicio.Tendremos que realizar uuna revision automatisada donde
+veremos podremos revisar y conocer mas del lenguaje de Python
+
+#Tecnologías y Técnicas Utilizadas
+- Python
+- Selenium WebDriver
+- Pytest
+- Git
+
+# Descripcion de tecnicas usadas
+Nos aventuramos al mundo del lenguaje con Selenium,
+usamos herrmaientas externas e internas, com GitHub ( que nos fue de ayuda en el proyecto)
+implementamos una nueva forma de ejecutar codigos con Selenium
+
+# Ejecutar prueba
+* Mediante el terminal debemos escribir el comando pytest y se ejecutara los codigos
+* Dando click en la parte superior derecha en el boton de reproducir
+
+
+
+
+
