@@ -2,8 +2,9 @@
 
 # Descripción
 Este proyecto es una aplicación web que proporciona servicios de transporte urbano. Permite a los usuarios planificar rutas,
-solicitar taxis y seleccionar diferentes tarifas de servicio.Tendremos que realizar uuna revision automatisada donde
-veremos podremos revisar y conocer mas del lenguaje de Python
+solicitar taxis y seleccionar diferentes tarifas de servicio.Tendremos que realizar una revision automatisada donde
+veremos, podremos revisar y conocer mas del lenguaje de Python, tambien realizaremos varias pruebas para la ejecucion
+automatizada.
 
 #Tecnologías y Técnicas Utilizadas
 - Python
@@ -15,10 +16,20 @@ veremos podremos revisar y conocer mas del lenguaje de Python
 Nos aventuramos al mundo del lenguaje con Selenium,
 usamos herrmaientas externas e internas, com GitHub ( que nos fue de ayuda en el proyecto)
 implementamos una nueva forma de ejecutar codigos con Selenium
+Pyteste tendra tambien un lugar importante en el proyecto
 
 # Ejecutar prueba
+*Antes de ejecutar debemos preparar nuestra terminal
+*Lo podremos hacer mediante dos maneras:
+   1: Por el terminal, buscar el codigo de instalacion correcto
+   2: Por la option "Package" buscaremos que debemos implementar en nuestro lenguaje e instalamo
+*Luego ya estamos listos para ejecutar
 * Mediante el terminal debemos escribir el comando pytest y se ejecutara los codigos
 * Dando click en la parte superior derecha en el boton de reproducir
+
+Datos extras:
+Aprendi a separar en orden mis pruebas, poco a poco fui viendo como se veia ordenado y legible, me causo mucha
+alegria poder lograr eso, aprendi tambien a realizar automatizaciones, que es como un "truco de magia de los programadores"
 
 
 
