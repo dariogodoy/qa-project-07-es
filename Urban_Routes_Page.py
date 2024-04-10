@@ -16,7 +16,7 @@ class UrbanRoutesPage:
     taxi_button = (By.CLASS_NAME, 'button.round')
     comfort_field = (By.XPATH, '/html/body/div/div/div[3]/div[3]/div[2]/div[1]/div[5]')
     button_phone_add = (By.CSS_SELECTOR, 'np-button')
-    set_phone = (By.CSS_SELECTOR, ' .np-input')
+    set_phone = (By.XPATH, '//*[@id="phone"]')
     button_next_add = (By.CSS_SELECTOR, 'div.buttons > button.button.full[type="submit"]')
     card_code_field = (By.ID, 'code')
     button_submit = (By.XPATH, '#root > div > div.number-picker.open > div.modal > '
@@ -25,13 +25,13 @@ class UrbanRoutesPage:
     paymeth_button = (By.CSS_SELECTOR, 'div.pp-button.filled')
     add_card_button = (By.XPATH, '//*[@id="root"]/div/div[2]/div[2]/div[1]/div[2]/div[3]')
     card_number_field = (By.XPATH, '/html/body/div/div/div[2]/div[2]/div[2]/form/div[1]/div[1]/div[2]/input')
-    cards_code_field = (By.XPATH, '/html/body/div/div/div[2]/div[2]/div[2]/form/div[1]/div[2]/div[2]/div[2]/input')
+    cards_code_field = (By.CSS_SELECTOR, '.card-code-input > input:nth-child(1)')
     add_button = (By.XPATH, '/html/body/div/div/div[2]/div[2]/div[2]/form/div[3]/button[1]')
     close_window = (By.CSS_SELECTOR, '.payment-picker > div:nth-child(2) > div:nth-child(1) > button:nth-child(1)')
     message_field = (By.ID, 'comment')
     open_section = (By.CSS_SELECTOR, 'div.reqs-header')
-    blanket_tissues_button = (By.CSS_SELECTOR, '/html/body/div/div/div[3]/div[3]/div[2]/div['
-                                               '2]/div[4]/div[2]/div[1]/div/div[2]/div/span')
+    blanket_handkerchiefs_button = (By.CSS_SELECTOR, 'div.r-type-switch:nth-child(1) > div:nth-child(1) > '
+                                                     'div:nth-child(2) > div:nth-child(1) > span:nth-child(2)')
     ice_cream_button = (By.CSS_SELECTOR, 'div.counter-plus')
     request_button = (By.CLASS_NAME, 'smart-butto')
     driver_info_modal = (By.CLASS_NAME, 'driver-info')
@@ -105,6 +105,10 @@ class UrbanRoutesPage:
         # Haz clic en el botón de la tarifa "Comfort"
         comfort_tariff_button.click()
 
+    def get_comfort_tariff(self):
+        comfort_text = self.driver.find_element(*self.comfort_field).text
+        return comfort_text.split('\n')[0]  # Obtener solo la parte antes del salto de línea y el precio
+
     def add_phone_button(self):
         # Esperar a que el botón de teléfono esté presente y sea interactivo
         wait = WebDriverWait(self.driver, 20)
@@ -116,13 +120,17 @@ class UrbanRoutesPage:
     def complete_phone_number(self, phone_number):
         # Esperar a que el campo de número de teléfono esté presente y sea interactivo
         wait = WebDriverWait(self.driver, 40)
-        phone_input = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.np-input input#phone')))
+        phone_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="phone"]')))
 
         # Limpiar el campo de entrada antes de ingresar el número de teléfono
         phone_input.clear()
 
         # Ingresar el número de teléfono en el campo de entrada
         phone_input.send_keys(phone_number)
+
+    def get_set_phone(self):
+        phone_element = self.driver.find_element(*self.set_phone)
+        return phone_element.get_attribute('value') if phone_element is not None else None
 
     def click_next_button(self):
         # Esperar a que el botón "Siguiente" esté presente y sea interactivo
@@ -146,19 +154,11 @@ class UrbanRoutesPage:
             confirm_button.click()
 
     def pay_method_click(self):
-        # Esperar a que el elemento "overlay" desaparezca completamente
-        try:
-            WebDriverWait(self.driver, 15).until_not(
-                EC.presence_of_element_located((By.CLASS_NAME, 'overlay'))
-            )
-            print("El elemento 'overlay' ha desaparecido completamente.")
-        except Exception as e:
-            print("Error al esperar a que el elemento 'overlay' desaparezca:", e)
 
         # Intentar hacer clic en el botón de método de pago usando JavaScript
         try:
             # Encontrar el elemento del botón de método de pago
-            payment_method_button = WebDriverWait(self.driver, 10).until(
+            payment_method_button = WebDriverWait(self.driver, 30).until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, 'div.pp-button.filled'))
             )
 
@@ -194,13 +194,19 @@ class UrbanRoutesPage:
         card_number_field.send_keys(card_number)
 
         # Encuentra el campo de entrada para el código de la tarjeta y lo completa
-        card_code_field = self.driver.find_element(By.XPATH,
-                                                   '/html/body/div/div/div[2]/div[2]/div[2]/form/div[1]/div[2]/div['
-                                                   '2]/div[2]/input')
+        card_code_field = self.driver.find_element(By.CSS_SELECTOR, '.card-code-input > input:nth-child(1)')
+
         card_code_field.send_keys(card_code)
 
         # Simula presionar la tecla TAB para activar el siguiente campo (si es necesario)
         card_code_field.send_keys(Keys.TAB)
+
+    def get_card_number(self):
+        return self.driver.find_element(*self.card_number_field).get_property('value')
+
+    def get_card_code(self):
+        card_code_field = self.driver.find_element(*self.card_code_field)
+        return card_code_field.get_attribute('value')
 
     def click_add_button(self):
         """Clicks the 'Add' button."""
@@ -232,15 +238,33 @@ class UrbanRoutesPage:
         message = "Hola, buenas noches."
         comment_input.send_keys(message)
 
-    def click_blanket_tissues(self):
+    def get_message(self):
+        message_fiel = self.driver.find_element(*self.message_field)
+        return message_fiel.get_attribute('value')
+
+    def click_blanket_handkerchiefs(self):
         # Encuentra el interruptor para solicitar la manta y los pañuelos y haz clic en él
-        blanket_tissues_switch = self.driver.find_element(By.XPATH, '/html/body/div/div/div[3]/div[3]/div[2]/div['
-                                                                    '2]/div[4]/div[2]/div[1]/div/div[2]/div/span')
+        blanket_tissues_switch = self.driver.find_element(By.CSS_SELECTOR, 'div.r-type-switch:nth-child(1) > '
+                                                                           'div:nth-child(1) > div:nth-child(2) > '
+                                                                           'div:nth-child(1) > span:nth-child(2)')
         blanket_tissues_switch.click()
+
+    def get_blanket_handkerchiefs(self):
+        blanket_tissues_switch = self.driver.find_element(By.CSS_SELECTOR, '.switch input[type="checkbox"]')
+        return blanket_tissues_switch.is_selected()
 
     def increment_ice_cream(self):
         plus_button = self.driver.find_element(By.CSS_SELECTOR, 'div.counter-plus')
         plus_button.click()
+
+    def get_ice_button(self):
+        try:
+            element = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, 'div.counter-plus'))
+            )
+            return element
+        except:
+            return False
 
     def click_call_taxi_button(self):
         # Espera hasta que el botón "Call a taxi" sea clickeable
@@ -248,6 +272,13 @@ class UrbanRoutesPage:
             EC.element_to_be_clickable((By.CLASS_NAME, 'smart-button'))
         )
         call_taxi_button.click()
+
+    def get_call_taxi_button(self):
+        # Waits up to 10 seconds for the "Call a taxi" button to be present
+        call_taxi_button = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'button.smart-button'))
+        )
+        return call_taxi_button
 
     def wait_for_driver_info(self):
         # Espera hasta que la información del conductor esté presente en el modal
@@ -260,5 +291,3 @@ class UrbanRoutesPage:
 
     def get_selected_mode(self):
         pass
-
-
